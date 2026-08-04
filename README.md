@@ -26,6 +26,7 @@ HomeWork giúp gom công việc cá nhân, gia đình, học tập và công vi�
 | **`HomeWork-Windows-Portable.zip`** | Không muốn cài đặt | Giải nén toàn bộ, rồi nhấp đúp **`HomeWork.exe`**. |
 
 Tải bản mới nhất tại [GitHub Releases](https://github.com/Base27-CVNSS/HomeWork/releases/latest).
+Mỗi commit trên `main` cũng tạo gói thử nghiệm trong trang [GitHub Actions](https://github.com/Base27-CVNSS/HomeWork/actions/workflows/windows-release.yml).
 
 > Windows SmartScreen có thể hiện cảnh báo ở bản chưa ký số. Chọn **More info → Run anyway** nếu tệp được tải từ trang Releases chính thức của kho này.
 
