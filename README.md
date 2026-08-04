@@ -30,6 +30,8 @@ Mỗi commit trên `main` cũng tạo gói thử nghiệm trong trang [GitHub Ac
 
 > Windows SmartScreen có thể hiện cảnh báo ở bản chưa ký số. Chọn **More info → Run anyway** nếu tệp được tải từ trang Releases chính thức của kho này.
 
+Xem [hướng dẫn Windows chi tiết](docs/WINDOWS.md) để cài portable, sao lưu và xử lý SmartScreen.
+
 ## Tính năng
 
 - Bảng tổng quan: số việc đang làm, đến hạn hôm nay và đã hoàn thành.
