@@ -87,7 +87,7 @@ jobs:
           if-no-files-found: error
 
       - name: Attach packages to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v') || github.event.head_commit.message == 'release: publish HomeWork v1.0.0'
+        if: "${{ startsWith(github.ref, 'refs/tags/v') || github.event.head_commit.message == 'release: publish HomeWork v1.0.0' }}"
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v1.0.0' }}
