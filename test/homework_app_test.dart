@@ -21,7 +21,7 @@ void main() {
     await controller.load();
 
     await tester.pumpWidget(HomeWorkApp(controller: controller));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
 
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byIcon(Icons.space_dashboard_rounded), findsOneWidget);
