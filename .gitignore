@@ -1,0 +1,29 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+coverage/
+
+# Generated platform folders (created by flutter create in CI/local setup)
+.metadata
+android/
+ios/
+linux/
+macos/
+web/
+windows/
+
+# IDE and OS
+.idea/
+.vscode/
+*.iml
+*.log
+Thumbs.db
+.DS_Store
+
+# Local workspace data
+workspace.json
+*.tmp

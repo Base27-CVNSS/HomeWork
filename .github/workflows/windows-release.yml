@@ -1,0 +1,94 @@
+name: Windows Release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Flutter stable
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Windows runner
+        shell: pwsh
+        run: |
+          flutter config --enable-windows-desktop
+          flutter create --platforms=windows --org=vn.base27 --project-name=homework .
+          ./tooling/configure_windows.ps1
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Format, analyze and test
+        shell: pwsh
+        run: |
+          dart format lib test
+          flutter analyze
+          flutter test
+
+      - name: Build release
+        run: flutter build windows --release
+
+      - name: Prepare portable package
+        id: package
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem build/windows -Recurse -Filter HomeWork.exe |
+            Where-Object { $_.Directory.Name -eq 'Release' } |
+            Select-Object -First 1
+          if (-not $exe) { throw 'Không tìm thấy HomeWork.exe sau khi build.' }
+
+          $releaseDir = $exe.Directory.FullName
+          "release_dir=$releaseDir" >> $env:GITHUB_OUTPUT
+          New-Item -ItemType Directory -Force -Path dist/portable | Out-Null
+          Copy-Item "$releaseDir/*" dist/portable -Recurse -Force
+          Compress-Archive -Path dist/portable/* -DestinationPath dist/HomeWork-Windows-Portable.zip -Force
+
+      - name: Build one-click installer
+        shell: pwsh
+        env:
+          RELEASE_DIR: ${{ steps.package.outputs.release_dir }}
+        run: |
+          $iscc = 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe'
+          if (-not (Test-Path $iscc)) {
+            choco install innosetup --no-progress -y
+          }
+          & $iscc "/DSourceDir=$env:RELEASE_DIR" "/DAppVersion=1.0.0" installer/HomeWork.iss
+          if (-not (Test-Path dist/HomeWork-Setup.exe)) {
+            throw 'Không tạo được HomeWork-Setup.exe.'
+          }
+
+      - name: Upload Windows packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: HomeWork-Windows-x64
+          path: |
+            dist/HomeWork-Setup.exe
+            dist/HomeWork-Windows-Portable.zip
+          if-no-files-found: error
+
+      - name: Attach packages to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/HomeWork-Setup.exe
+            dist/HomeWork-Windows-Portable.zip
