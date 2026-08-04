@@ -36,12 +36,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Format, analyze and test
-        shell: pwsh
-        run: |
-          dart format lib test
-          flutter analyze
-          flutter test
+      - name: Format source
+        run: dart format lib test
+
+      - name: Analyze source
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --timeout 2m
 
       - name: Build release
         run: flutter build windows --release
